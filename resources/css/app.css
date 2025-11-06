@@ -1,0 +1,39 @@
+
+/* Barcode scanner animation */
+@keyframes scanLine {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(100%); }
+}
+
+.scanning::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #3B82F6, transparent);
+    animation: scanLine 0.5s linear infinite;
+}
+
+/* Quick search results styling */
+.quick-search-result {
+    transition: background-color 0.2s ease;
+}
+
+.quick-search-result:hover {
+    background-color: #f9fafb;
+}
+
+/* Toast animations */
+.fixed.transform {
+    transform: translateX(100%);
+}
+
+.fixed.transform.translate-x-0 {
+    transform: translateX(0);
+}
+
+.fixed.transform.translate-x-full {
+    transform: translateX(100%);
+}

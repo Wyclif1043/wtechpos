@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Payment Voucher - {{ $voucherNumber }}</title>
+    <style>
+        body { font-family: DejaVu Sans, sans-serif; font-size: 12px; }
+        .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #333; padding-bottom: 10px; }
+        .company-name { font-size: 24px; font-weight: bold; margin-bottom: 5px; }
+        .document-title { font-size: 18px; margin: 10px 0; }
+        .section { margin: 15px 0; }
+        .section-title { font-weight: bold; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 10px; }
+        .row { display: flex; margin-bottom: 5px; }
+        .col-6 { width: 50%; }
+        .table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        .table th, .table td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        .table th { background-color: #f5f5f5; font-weight: bold; }
+        .text-right { text-align: right; }
+        .text-center { text-align: center; }
+        .amount-in-words { margin: 15px 0; padding: 10px; background-color: #f9f9f9; border: 1px solid #ddd; }
+        .footer { margin-top: 30px; padding-top: 10px; border-top: 1px solid #ddd; }
+        .signature-line { margin-top: 50px; border-top: 1px solid #333; width: 200px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="company-name">{{ $company['name'] }}</div>
+        <div class="document-title">PAYMENT VOUCHER</div>
+        <div><strong>Voucher No:</strong> {{ $voucherNumber }}</div>
+    </div>
+
+    <div class="row">
+        <div class="col-6">
+            <div class="section">
+                <div class="section-title">Payee Information</div>
+                <div><strong>{{ $purchaseOrder->supplier->name }}</strong></div>
+                <div>{{ $purchaseOrder->supplier->address }}</div>
+                <div>Contact: {{ $purchaseOrder->supplier->contact_person }}</div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="section">
+                <div class="section-title">Payment Details</div>
+                <div><strong>Payment Date:</strong> {{ \Carbon\Carbon::parse($paymentData['payment_date'])->format('M d, Y') }}</div>
+                <div><strong>Payment Method:</strong> {{ $paymentData['payment_method'] }}</div>
+                <div><strong>Reference No:</strong> {{ $paymentData['reference_number'] ?? 'N/A' }}</div>
+                <div><strong>PO Reference:</strong> {{ $purchaseOrder->po_number }}</div>
+            </div>
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Description</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>Payment for Purchase Order {{ $purchaseOrder->po_number }}</td>
+                <td class="text-right">${{ number_format($paymentData['amount_paid'], 2) }}</td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="2" class="text-right"><strong>Total Payment:</strong></td>
+                <td class="text-right"><strong>${{ number_format($paymentData['amount_paid'], 2) }}</strong></td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <div class="amount-in-words">
+        <strong>Amount in Words:</strong> 
+        {{ $this->numberToWords($paymentData['amount_paid']) }} Dollars
+    </div>
+
+    <div class="footer">
+        <div class="row">
+            <div class="col-4">
+                <div><strong>Prepared By:</strong></div>
+                <div class="signature-line"></div>
+                <div>Name: ___________________</div>
+                <div>Date: ___________________</div>
+            </div>
+            <div class="col-4">
+                <div><strong>Checked By:</strong></div>
+                <div class="signature-line"></div>
+                <div>Name: ___________________</div>
+                <div>Date: ___________________</div>
+            </div>
+            <div class="col-4">
+                <div><strong>Approved By:</strong></div>
+                <div class="signature-line"></div>
+                <div>Name: ___________________</div>
+                <div>Date: ___________________</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

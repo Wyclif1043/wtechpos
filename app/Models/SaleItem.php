@@ -1,0 +1,57 @@
+<?php
+// app/Models/SaleItem.php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class SaleItem extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'sale_id', 'product_id', 'quantity', 'unit_price', 'total_price', 'discount'
+    ];
+
+    protected $casts = [
+        'unit_price' => 'decimal:2',
+        'total_price' => 'decimal:2',
+        'discount' => 'decimal:2',
+    ];
+
+    public function sale()
+    {
+        return $this->belongsTo(Sale::class);
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+
+    public function warranties()
+    {
+        return $this->hasMany(Warranty::class);
+    }
+
+    public function returnItems()
+    {
+        return $this->hasMany(ReturnItem::class);
+    }
+
+    public function getQuantityReturnedAttribute()
+    {
+        return $this->returnItems()->sum('quantity_returned');
+    }
+
+    public function getQuantityRemainingAttribute()
+    {
+        return $this->quantity - $this->quantity_returned;
+    }
+
+    public function getCanReturnAttribute()
+    {
+        return $this->quantity_remaining > 0;
+    }
+}
